@@ -40,9 +40,6 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-/* -------------------------------------------------------
-   INFO CARD WIDGET
-------------------------------------------------------- */
 Widget infoCard({
   required IconData icon,
   required String title,
@@ -82,26 +79,28 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       backgroundColor: Colors.white,
 
-      /* ---------------- APP BAR ---------------- */
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
         centerTitle: true,
         title: const Text("Home", style: TextStyle(color: Colors.black)),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.list_alt),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => ReportPage(title: 'Report')),
-              );
-            },
+          Padding(
+            padding: EdgeInsets.only(right: 16),
+            child: IconButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ReportPage(title: 'Report'),
+                  ),
+                );
+              },
+              icon: Icon(Icons.list_alt),
+            ),
           ),
         ],
       ),
 
-      /* ---------------- BODY ---------------- */
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(

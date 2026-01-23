@@ -3,6 +3,7 @@ import 'package:project1/add_page.dart';
 import 'package:project1/firebase_options.dart';
 import 'package:project1/main.dart';
 import 'package:project1/profile_page.dart';
+import 'package:project1/report_page.dart';
 //import 'package:project1/report_page.dart';
 import 'package:project1/scan_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -80,11 +81,26 @@ class _InventoryPageState extends State<InventoryPage> {
     return Scaffold(
       backgroundColor: Colors.white,
 
-      appBar: AppBar(
+       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
         centerTitle: true,
         title: const Text("Inventory", style: TextStyle(color: Colors.black)),
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 16),
+            child: IconButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ReportPage(title: 'Report'),
+                  ),
+                );
+              },
+              icon: Icon(Icons.list_alt),
+            ),
+          ),
+        ],
       ),
 
       body: Padding(
