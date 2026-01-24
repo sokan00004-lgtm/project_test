@@ -10,7 +10,7 @@ import 'package:project1/report_page.dart';
 import 'package:project1/scan_page.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // ✅ REQUIRED
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
@@ -70,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void dispose() {
-    _searchController.dispose(); // Good practice to prevent memory leaks
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -105,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // Search Bar
+            // 🔍 Search Bar
             Container(
               height: 45,
               decoration: BoxDecoration(
@@ -113,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 borderRadius: BorderRadius.circular(15),
               ),
               child: TextField(
-                controller: _searchController, // Link the controller
+                controller: _searchController,
                 onChanged: (value) {
                   setState(() {
                     _searchQuery = value.trim().toLowerCase();
@@ -138,9 +138,62 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
 
-            /* -------- TOTAL INVENTORY & MONEY -------- */
+            // 🔎 SEARCH RESULTS
+            if (_searchQuery.isNotEmpty) ...[
+              const Text(
+                "Search Results",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+              const SizedBox(height: 10),
+
+              StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection("Product")
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  final docs = snapshot.data!.docs;
+
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: docs.length,
+                    itemBuilder: (context, index) {
+                      final data = docs[index].data() as Map<String, dynamic>;
+                      final pName = (data['Product Name'] ?? "").toString();
+
+                      if (!pName.toLowerCase().contains(_searchQuery)) {
+                        return const SizedBox.shrink();
+                      }
+
+                      return Card(
+                        color: Colors.grey.shade100,
+                        child: ListTile(
+                          leading: const Icon(Icons.shopping_bag_outlined),
+                          title: Text(
+                            pName,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Text("Quantity: ${data['Quantity']}"),
+                          trailing: Text(
+                            "Price: ${data['Cost Price']}\$",
+                            style: const TextStyle(color: Colors.deepPurple),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+            ],
+
+            // 📦 INFO CARDS (ALWAYS VISIBLE)
             Row(
               children: [
                 Expanded(
@@ -159,18 +212,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       title: 'Total Inventory',
                       value: StreamBuilder<QuerySnapshot>(
                         stream: FirebaseFirestore.instance
-                            .collection("Product") // 🔥 YOUR COLLECTION
+                            .collection("Product")
                             .snapshots(),
                         builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return const Text(
-                              '0 Items',
-                              style: TextStyle(color: Colors.green),
-                            );
-                          }
-
-                          final count = snapshot.data!.docs.length;
-
+                          final count = snapshot.hasData
+                              ? snapshot.data!.docs.length
+                              : 0;
                           return Text(
                             '$count Items',
                             style: const TextStyle(
@@ -183,9 +230,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                 ),
-
                 const SizedBox(width: 10),
-
                 Expanded(
                   child: infoCard(
                     icon: Icons.credit_card,
@@ -195,15 +240,16 @@ class _MyHomePageState extends State<MyHomePage> {
                           .collection("Product")
                           .snapshots(),
                       builder: (context, snapshot) {
-                        if (!snapshot.hasData) return const Text("...");
                         double total = 0;
-                        for (var doc in snapshot.data!.docs) {
-                          double price =
-                              double.tryParse(doc['Cost Price'].toString()) ??
-                              0;
-                          int qty =
-                              int.tryParse(doc['Quantity'].toString()) ?? 0;
-                          total += (price * qty);
+                        if (snapshot.hasData) {
+                          for (var doc in snapshot.data!.docs) {
+                            final price =
+                                double.tryParse(doc['Cost Price'].toString()) ??
+                                0;
+                            final qty =
+                                int.tryParse(doc['Quantity'].toString()) ?? 0;
+                            total += price * qty;
+                          }
                         }
                         return Text(
                           '${total.toStringAsFixed(2)} \$',
@@ -221,27 +267,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
             const SizedBox(height: 10),
 
-            /* ---------------- ALERT ---------------- */
             Row(
               children: [
                 Expanded(
                   child: infoCard(
                     icon: Icons.warning_amber_rounded,
                     title: 'Alert',
-                    value: // For Alert value:
-                    StreamBuilder<QuerySnapshot>(
+                    value: StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
                           .collection("Product")
                           .where("Quantity", isLessThan: 5)
                           .snapshots(),
                       builder: (context, snapshot) {
-                        int alertCount = snapshot.hasData
+                        final count = snapshot.hasData
                             ? snapshot.data!.docs.length
                             : 0;
                         return Text(
-                          '$alertCount Items Low',
+                          '$count Items Low',
                           style: TextStyle(
-                            color: alertCount > 0 ? Colors.red : Colors.green,
+                            color: count > 0 ? Colors.red : Colors.green,
                           ),
                         );
                       },
@@ -250,77 +294,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
-            if (_searchQuery.isNotEmpty) ...[
-              const SizedBox(height: 20),
-              if (_searchQuery.isNotEmpty) ...[
-                const Text(
-                  "Search Results",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                const SizedBox(height: 10),
-                StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection("Product")
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData)
-                      return const Center(child: CircularProgressIndicator());
-
-                    // Fetch docs and sort them so that items matching the search jump to the top
-                    List<QueryDocumentSnapshot> docs = snapshot.data!.docs;
-                    docs.sort((a, b) {
-                      String nameA = (a['Product Name'] ?? "")
-                          .toString()
-                          .toLowerCase();
-                      String nameB = (b['Product Name'] ?? "")
-                          .toString()
-                          .toLowerCase();
-
-                      bool matchA = nameA.contains(_searchQuery);
-                      bool matchB = nameB.contains(_searchQuery);
-
-                      if (matchA && !matchB) return -1; // Move match A up
-                      if (!matchA && matchB) return 1; // Move match B up
-                      return 0;
-                    });
-
-                    return ListView.builder(
-                      shrinkWrap: true, // Crucial inside SingleChildScrollView
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: docs.length,
-                      itemBuilder: (context, index) {
-                        final data = docs[index].data() as Map<String, dynamic>;
-                        final String pName = data['Product Name'] ?? "Unknown";
-
-                        // Only show items that match the search to keep the list clean
-                        if (!pName.toLowerCase().contains(_searchQuery))
-                          return const SizedBox.shrink();
-
-                        return Card(
-                          color: Colors.grey.shade100,
-                          margin: const EdgeInsets.symmetric(vertical: 4),
-                          child: ListTile(
-                            leading: const Icon(Icons.shopping_bag_outlined),
-                            title: Text(
-                              pName,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            subtitle: Text("Quantity: ${data['Quantity']}"),
-                            trailing: Text(
-                              "Price: ${data['Cost Price']}\$",
-                              style: const TextStyle(color: Colors.deepPurple),
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ],
-            ],
           ],
         ),
       ),
