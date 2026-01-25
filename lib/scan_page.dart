@@ -151,24 +151,40 @@ class _ScanPageState extends State<ScanPage> {
                         children: [
                           Text("Name: ${data["Product Name"]}"),
                           Text("Quantity: 1"),
-                          
+
                           Text("Price: ${data["Cost Price"]}\$"),
                         ],
                       ),
                       actions: [
-                        TextButton(onPressed: ()=> Navigator.pop(context), child: Text("Cancel")),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text("Cancel"),
+                        ),
 
                         TextButton(
-                          onPressed: (){
+                          onPressed: () {
                             // Update data.Qnatity in Firestore decrement by 1
                             FirebaseFirestore.instance
                                 .collection('Product')
                                 .doc(query.docs.first.id)
                                 .update({
-                              'Quantity': (data['Quantity'] as int) - 1,
-                            });
-                            Navigator.pop(context);
+                                  'Quantity': (data['Quantity'] as int) - 1,
+                                });
 
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "Sold 1 ${data["Product Name"]}",
+                                ),
+                              ),
+                            );
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    MyHomePage(title: 'Home'),
+                              ),
+                            );
                           },
                           child: Text("Confirm"),
                         ),
