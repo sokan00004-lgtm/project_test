@@ -79,9 +79,9 @@ class _InventoryPageState extends State<InventoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 188, 210, 239),
 
-       appBar: AppBar(
+      appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
         centerTitle: true,
@@ -111,7 +111,7 @@ class _InventoryPageState extends State<InventoryPage> {
             Container(
               height: 45,
               decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 217, 215, 218),
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(15),
               ),
               child: TextField(
@@ -240,7 +240,12 @@ class _InventoryPageState extends State<InventoryPage> {
                         shape: isMatch
                             ? RoundedRectangleBorder(
                                 side: BorderSide(
-                                  color: const Color.fromARGB(255, 204, 200, 212),
+                                  color: const Color.fromARGB(
+                                    255,
+                                    204,
+                                    200,
+                                    212,
+                                  ),
                                   width: 1,
                                 ),
                                 borderRadius: BorderRadius.circular(10),
@@ -252,11 +257,12 @@ class _InventoryPageState extends State<InventoryPage> {
                         ),
                         child: ListTile(
                           // ... keep your existing ListTile code ...
+                          leading: Icon(Icons.shopping_bag_outlined),
                           title: Text(
                             productName,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          subtitle: Text("Quantity: ${data["Quantity"] }"),
+                          subtitle: Text("Quantity: ${data["Quantity"]}"),
                           trailing: Text("Price: ${data["Cost Price"]}\$"),
                         ),
                       );

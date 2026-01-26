@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: .fromSeed(seedColor: Color.fromARGB(255, 248, 247, 251)),
       ),
       home: const ReportPage(title: 'Flutter Demo Home Page'),
     );
@@ -51,16 +51,6 @@ class MyApp extends StatelessWidget {
 
 class ReportPage extends StatefulWidget {
   const ReportPage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -70,86 +60,112 @@ class ReportPage extends StatefulWidget {
 class _ReportPageState extends State<ReportPage> {
   final FirebaseFirestore db = FirebaseFirestore.instance;
 
-  bool showAlertOnly = false;
+  String filter = "All"; // All | In | Out
 
   @override
   Widget build(BuildContext context) {
+    Query query = db.collection("Report");
+
+    if (filter != "All") {
+      query = query.where("In", isEqualTo: filter);
+    }
+
     return Scaffold(
-      backgroundColor: Colors.white,
-
+      backgroundColor: const Color.fromARGB(255, 188, 210, 239),
       appBar: AppBar(
-        elevation: 0,
+        title: Text("Report", style: TextStyle(color: Colors.black)),
         backgroundColor: Colors.white,
+        elevation: 0,
         centerTitle: true,
-        title: const Text("Report", style: TextStyle(color: Colors.black)),
       ),
 
-      body: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          children: [
-
-            Expanded(
-              child: StreamBuilder<QuerySnapshot>(
-                stream: showAlertOnly
-                    ? db
-                          .collection("Product")
-                          
-                          .snapshots()
-                    : db.collection("Product").snapshots(),
-                builder: (context, snapshot) {
-                 
-
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-
-                  final docs = snapshot.data!.docs;
-
-                  
-
-                  return ListView.builder(
-                    itemCount: docs.length,
-                    itemBuilder: (context, index) {
-                      final data = docs[index].data() as Map<String, dynamic>;
-                      
-                     
-                      return Card(
-                        color: Colors.grey.shade200,
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 6,
-                        ),
-                        child: ListTile(
-                          
-                          title: Text(
-                            data["Product Name"] ?? "",
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text("Price: ${data["Cost Price"]}\$"),
-                          trailing: Column(
-                            mainAxisSize: MainAxisSize
-                                .min, // Important to wrap content only
-                            children: [
-                              Text("Date: ${data["Date"]}"),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              Text("Time: ${data["Time"]}"),
-                              Text("In: ${data["In"]}"),
-
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
+      body: Column(
+        children: [
+          /// 🔹 FILTER BUTTONS
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _filterButton("All"),
+                _filterButton("In"),
+                _filterButton("Out"),
+              ],
             ),
-          ],
-        ),
+          ),
+
+          /// 🔹 REPORT LIST
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: query.snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const Center(child: Text("No records found"));
+                }
+
+                final docs = snapshot.data!.docs;
+
+                return ListView.builder(
+                  itemCount: docs.length,
+                  itemBuilder: (context, index) {
+                    final data = docs[index].data() as Map<String, dynamic>;
+
+                    final isIn = data["In"] == "In";
+
+                    return Card(
+                      color: const Color.fromARGB(255, 242, 238, 238),
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
+                      child: ListTile(
+                        title: Text(
+                          data["Product Name"] ?? "",
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Price: ${data["Cost Price"]}\$"),
+                            Text("Date: ${data["Date"]}"),
+                            Text("Time: ${data["Time"]}"),
+                          ],
+                        ),
+                        trailing: Chip(
+                          label: Text(
+                            data["In"],
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          backgroundColor: isIn ? Colors.green : Colors.red,
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
-     );
+    );
+  }
+
+  /// 🔹 FILTER BUTTON WIDGET
+  Widget _filterButton(String value) {
+    return ElevatedButton(
+      onPressed: () {
+        setState(() => filter = value);
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: filter == value
+            ? const Color.fromARGB(255, 172, 173, 229)
+            : const Color.fromARGB(255, 238, 236, 236),
+      ),
+      child: Text(value),
+    );
   }
 }

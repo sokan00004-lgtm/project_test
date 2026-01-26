@@ -6,7 +6,8 @@ import 'package:project1/inventory_page.dart';
 import 'package:project1/main.dart';
 import 'package:project1/profile_page.dart';
 import 'package:project1/report_page.dart';
-import 'package:project1/scanA_page.dart';
+import 'package:project1/scan_add_page.dart';
+
 
 import 'package:project1/scan_page.dart';
 
@@ -109,7 +110,7 @@ class _AddPageState extends State<AddPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 188, 210, 239),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,

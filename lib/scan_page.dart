@@ -72,7 +72,7 @@ class _ScanPageState extends State<ScanPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 188, 210, 239),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
@@ -178,6 +178,18 @@ class _ScanPageState extends State<ScanPage> {
                                 ),
                               ),
                             );
+
+                            // add a new document to "Report" collection
+                            FirebaseFirestore.instance
+                                .collection('Report')
+                                .add({
+                                  'Product Name': data['Product Name'],
+                                  'Cost Price': data['Cost Price'],
+                                  'Date': DateTime.now().toLocal().toString().split(' ')[0],
+                                  'Time': TimeOfDay.now().format(context),
+                                  'In': 'Out',
+                                });
+
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(

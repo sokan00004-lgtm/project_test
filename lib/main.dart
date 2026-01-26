@@ -77,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 188, 210, 239),
 
       appBar: AppBar(
         elevation: 0,
@@ -109,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Container(
               height: 45,
               decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 217, 215, 218),
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(15),
               ),
               child: TextField(
