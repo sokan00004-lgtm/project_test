@@ -102,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
 
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         child: Column(
           children: [
             // 🔍 Search Bar
@@ -121,10 +121,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
                 decoration: InputDecoration(
                   hintText: "Search Product Name",
-                  prefixIcon: const Icon(Icons.search),
+                  prefixIcon: Icon(Icons.search),
                   suffixIcon: _searchQuery.isNotEmpty
                       ? IconButton(
-                          icon: const Icon(Icons.clear),
+                          icon: Icon(Icons.clear),
                           onPressed: () {
                             setState(() {
                               _searchController.clear();
@@ -138,15 +138,15 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
 
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
-            // 🔎 SEARCH RESULTS
+            //  SEARCH RESULTS
             if (_searchQuery.isNotEmpty) ...[
-              const Text(
+              Text(
                 "Search Results",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10),
 
               StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
@@ -154,35 +154,35 @@ class _MyHomePageState extends State<MyHomePage> {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
-                    return const Center(child: CircularProgressIndicator());
+                    return Center(child: CircularProgressIndicator());
                   }
 
                   final docs = snapshot.data!.docs;
 
                   return ListView.builder(
                     shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
+                    physics: NeverScrollableScrollPhysics(),
                     itemCount: docs.length,
                     itemBuilder: (context, index) {
                       final data = docs[index].data() as Map<String, dynamic>;
                       final pName = (data['Product Name'] ?? "").toString();
 
                       if (!pName.toLowerCase().contains(_searchQuery)) {
-                        return const SizedBox.shrink();
+                        return SizedBox.shrink();
                       }
 
                       return Card(
                         color: Colors.grey.shade100,
                         child: ListTile(
-                          leading: const Icon(Icons.shopping_bag_outlined),
+                          leading: Icon(Icons.shopping_bag_outlined),
                           title: Text(
                             pName,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           subtitle: Text("Quantity: ${data['Quantity']}"),
                           trailing: Text(
                             "Price: ${data['Cost Price']}\$",
-                            style: const TextStyle(color: Colors.deepPurple),
+                            style: TextStyle(color: Colors.deepPurple),
                           ),
                         ),
                       );
@@ -190,10 +190,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   );
                 },
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
             ],
 
-            // 📦 INFO CARDS (ALWAYS VISIBLE)
+            //  INFO CARDS (ALWAYS VISIBLE)
             Row(
               children: [
                 Expanded(
@@ -220,7 +220,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               : 0;
                           return Text(
                             '$count Items',
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.green,
                               fontWeight: FontWeight.bold,
                             ),
@@ -230,7 +230,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 10),
+                SizedBox(width: 10),
                 Expanded(
                   child: infoCard(
                     icon: Icons.credit_card,
@@ -253,7 +253,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         }
                         return Text(
                           '${total.toStringAsFixed(2)} \$',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.green,
                             fontWeight: FontWeight.bold,
                           ),
@@ -265,7 +265,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
 
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
 
             Row(
               children: [
@@ -298,7 +298,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
 
-      /* ---------------- BOTTOM NAV ---------------- */
       bottomNavigationBar: BottomAppBar(
         height: 84,
         color: Colors.white,

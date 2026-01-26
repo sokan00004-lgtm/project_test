@@ -34,9 +34,9 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final logo = Image.asset('assets/logo.png');
-  // ---------- EDIT MODE ----------
+
   bool isEditing = false;
-  // Text Field Controller for input fields
+
   final nameController = TextEditingController();
   final genderController = TextEditingController();
   final idController = TextEditingController();
@@ -63,7 +63,7 @@ class _ProfilePageState extends State<ProfilePage> {
         elevation: 0,
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: const Text("Home", style: TextStyle(color: Colors.black)),
+        title: Text("Home", style: TextStyle(color: Colors.black)),
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16),
@@ -81,7 +81,6 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
 
-      //  -------------------------- Body ---------------------------------
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child: Column(
@@ -128,7 +127,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ],
             ),
-            // ---------- FORM ----------
+
+            // form
             SizedBox(height: 24),
             Row(
               children: [
@@ -154,7 +154,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   isEditing = !isEditing;
                 });
                 if (!isEditing) {
-                  //SAVE TO FIREBASE HERE (later)
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("Profile updated successfully")),
                   );
@@ -258,12 +257,11 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  // ---------- INPUT FIELD ----------
   Widget buildField(String label, TextEditingController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
+        Text(label, style: TextStyle(fontWeight: FontWeight.w600)),
         SizedBox(height: 6),
         TextField(
           controller: controller,

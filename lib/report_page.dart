@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:project1/firebase_options.dart';
-// import 'package:project1/main.dart';
-// import 'package:project1/profile_page.dart';
-// import 'package:project1/report_page.dart';
-// import 'package:project1/scan_page.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -25,7 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -81,9 +78,9 @@ class _ReportPageState extends State<ReportPage> {
 
       body: Column(
         children: [
-          /// 🔹 FILTER BUTTONS
+          /// FILTER BUTTONS
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding:  EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -94,17 +91,17 @@ class _ReportPageState extends State<ReportPage> {
             ),
           ),
 
-          /// 🔹 REPORT LIST
+          ///  REPORT LIST
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: query.snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return  Center(child: CircularProgressIndicator());
                 }
 
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return const Center(child: Text("No records found"));
+                  return  Center(child: Text("No records found"));
                 }
 
                 final docs = snapshot.data!.docs;
@@ -118,14 +115,14 @@ class _ReportPageState extends State<ReportPage> {
 
                     return Card(
                       color: const Color.fromARGB(255, 242, 238, 238),
-                      margin: const EdgeInsets.symmetric(
+                      margin:  EdgeInsets.symmetric(
                         horizontal: 10,
                         vertical: 6,
                       ),
                       child: ListTile(
                         title: Text(
                           data["Product Name"] ?? "",
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          style:  TextStyle(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,7 +135,7 @@ class _ReportPageState extends State<ReportPage> {
                         trailing: Chip(
                           label: Text(
                             data["In"],
-                            style: const TextStyle(color: Colors.white),
+                            style:  TextStyle(color: Colors.white),
                           ),
                           backgroundColor: isIn ? Colors.green : Colors.red,
                         ),
@@ -154,7 +151,7 @@ class _ReportPageState extends State<ReportPage> {
     );
   }
 
-  /// 🔹 FILTER BUTTON WIDGET
+  /// FILTER BUTTON WIDGET
   Widget _filterButton(String value) {
     return ElevatedButton(
       onPressed: () {

@@ -4,7 +4,6 @@ import 'package:project1/firebase_options.dart';
 import 'package:project1/main.dart';
 import 'package:project1/profile_page.dart';
 import 'package:project1/report_page.dart';
-//import 'package:project1/report_page.dart';
 import 'package:project1/scan_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,39 +11,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  ).then((_) {
-    // print("Firebase initialized");
-  });
+  ).then((_) {});
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
+
+      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
       home: const InventoryPage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -71,7 +50,7 @@ class InventoryPage extends StatefulWidget {
 class _InventoryPageState extends State<InventoryPage> {
   final FirebaseFirestore db = FirebaseFirestore.instance;
   final TextEditingController _searchController = TextEditingController();
-  // 1. Add a variable to hold the search text
+  
   String searchQuery = "";
 
   bool showAlertOnly = false;
@@ -85,7 +64,7 @@ class _InventoryPageState extends State<InventoryPage> {
         elevation: 0,
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: const Text("Inventory", style: TextStyle(color: Colors.black)),
+        title:  Text("Inventory", style: TextStyle(color: Colors.black)),
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16),
@@ -104,7 +83,7 @@ class _InventoryPageState extends State<InventoryPage> {
       ),
 
       body: Padding(
-        padding: const EdgeInsets.all(12),
+        padding:  EdgeInsets.all(12),
         child: Column(
           children: [
             // 🔍 Search box (UI only)
@@ -123,10 +102,10 @@ class _InventoryPageState extends State<InventoryPage> {
                 },
                 decoration: InputDecoration(
                   hintText: "Search Product Name",
-                  prefixIcon: const Icon(Icons.search),
+                  prefixIcon:  Icon(Icons.search),
                   suffixIcon: _searchController.text.isNotEmpty
                       ? IconButton(
-                          icon: const Icon(Icons.clear),
+                          icon:  Icon(Icons.clear),
                           onPressed: () {
                             setState(() {
                               _searchController.clear();
@@ -141,7 +120,7 @@ class _InventoryPageState extends State<InventoryPage> {
             ),
 
             const SizedBox(height: 15),
-            // 🔘 Filter buttons
+            //  Filter buttons
             Row(
               children: [
                 OutlinedButton(
@@ -158,7 +137,7 @@ class _InventoryPageState extends State<InventoryPage> {
                         ? Colors.white
                         : Colors.deepPurple,
                   ),
-                  child: const Text("All Items"),
+                  child:  Text("All Items"),
                 ),
                 const SizedBox(width: 10),
                 OutlinedButton(
@@ -175,12 +154,12 @@ class _InventoryPageState extends State<InventoryPage> {
                         ? Colors.white
                         : Colors.deepPurple,
                   ),
-                  child: const Text("Alert Items"),
+                  child:  Text("Alert Items"),
                 ),
               ],
             ),
 
-            const SizedBox(height: 10),
+             SizedBox(height: 10),
 
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
@@ -192,9 +171,9 @@ class _InventoryPageState extends State<InventoryPage> {
                     : db.collection("Product").snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError)
-                    return const Center(child: Text("Error"));
+                    return  Center(child: Text("Error"));
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return  Center(child: CircularProgressIndicator());
                   }
 
                   // Convert docs to a local list for sorting
@@ -251,7 +230,7 @@ class _InventoryPageState extends State<InventoryPage> {
                                 borderRadius: BorderRadius.circular(10),
                               )
                             : null,
-                        margin: const EdgeInsets.symmetric(
+                        margin:  EdgeInsets.symmetric(
                           horizontal: 8,
                           vertical: 6,
                         ),

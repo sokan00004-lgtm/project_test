@@ -7,15 +7,12 @@ import 'package:project1/main.dart';
 import 'package:project1/profile_page.dart';
 import 'package:project1/report_page.dart';
 import 'package:project1/scan_add_page.dart';
-
-
 import 'package:project1/scan_page.dart';
 
 void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   ).then((_) {
-    // print("Firebase initialized");
   });
   runApp(const MyApp());
 }
@@ -23,29 +20,14 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+           colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
       home: const AddPage(title: 'Flutter Demo Home Page'),
     );
@@ -55,15 +37,7 @@ class MyApp extends StatelessWidget {
 class AddPage extends StatefulWidget {
   const AddPage({super.key, required this.title});
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
+  
   final String title;
 
   @override
@@ -239,9 +213,7 @@ class _AddPageState extends State<AddPage> {
                 } else {
                   await db.collection("Product").add({
                     "Product Name": controller_product_name.text,
-                    // convert to Quantity to int
                     "Quantity": int.parse(controller_quantity.text),
-                    // "Quantity": controller_quantity.text,
                     "Category": controller_category.text,
                     "Code Product": controller_code_product.text,
                     "Cost Price": controller_cost_price.text,
