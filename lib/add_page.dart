@@ -257,7 +257,7 @@ class _AddPageState extends State<AddPage> {
                     "Cost Price": controller_cost_price.text,
                     "In": "In",
                     "Date": DateTime.now().toString().substring(0, 10),
-                    "Time" : DateTime.now().toString().substring(11, 19),
+                    "Time" : TimeOfDay.now().format(context),
                   });
                   // Clear text fields
                   controller_product_name.clear();
