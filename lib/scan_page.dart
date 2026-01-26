@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:project1/add_page.dart';
 import 'package:project1/firebase_options.dart';
 import 'package:project1/inventory_page.dart';
-import 'package:project1/main.dart';
+import 'package:project1/home.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:project1/profile_page.dart';
 import 'package:project1/report_page.dart';
