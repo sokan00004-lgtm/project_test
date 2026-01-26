@@ -248,9 +248,16 @@ class _AddPageState extends State<AddPage> {
                     "Unit": controller_unit.text,
                     "Bar Code": controller_bar_code.text,
                     "Description": controller_description.text,
+                    
+                    
+                  });
+
+                  await db.collection("Report").add({
+                    "Product Name": controller_product_name.text,
+                    "Cost Price": controller_cost_price.text,
+                    "In": "In",
                     "Date": DateTime.now().toString().substring(0, 10),
                     "Time" : DateTime.now().toString().substring(11, 19),
-                    "In": controller_quantity.text,
                   });
                   // Clear text fields
                   controller_product_name.clear();
